@@ -33,12 +33,12 @@
 
 ########################################################################################################################
 # dimensões da tela
-.eqv UNIT_WIDTH     8                   # unidade da largura em pixels
-.eqv UNIT_HEIGHT    8                   # unidade da altura em pixels
+.eqv UNIT_WIDTH     16                   # unidade da largura em pixels
+.eqv UNIT_HEIGHT    16                   # unidade da altura em pixels
 .eqv DISPLAY_WIDTH  512                 # largura da tela gráfica em pixels
 .eqv DISPLAY_HEIGHT 512                 # altura da tela gráfica em pixels
-.eqv SCREEN_WIDTH   64                  # largura da tela: DISPLAY_WIDTH/UNIT-WIDTH
-.eqv SCREEN_HEIGHT  64                  # altura da tela: DISPLAY_HEIGHT/UNIT_HEIGHT
+.eqv SCREEN_WIDTH   32                  # largura da tela: DISPLAY_WIDTH/UNIT-WIDTH
+.eqv SCREEN_HEIGHT  32                  # altura da tela: DISPLAY_HEIGHT/UNIT_HEIGHT
 .eqv SCREEN_MEMORY_DIMENSION 16384      # tamanho da memória utilizada pela tela gráfica =  64 x 64 x 4 bytes
 .eqv DISPLAY_MEMORY_BASE 0x10010000     # endereço base da memória da tela gráfica
 
@@ -50,7 +50,7 @@
 .eqv MAROOM	        0x00800000	        # Marrom
 .eqv RED	        0x00FF0000	        # Vermelho
 .eqv PURPLE	        0x00800080	        # Roxo
-.eqv FUCHSIA	    0x00FF00FF          # Rosa	
+.eqv FUCHSIA	        0x00FF00FF          # Rosa	
 .eqv GREEN	        0x00008000	        # Verde
 .eqv LIME	        0x0000FF00	        # Limão
 .eqv OLIVE	        0x00808000	        # Oliva

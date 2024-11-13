@@ -5,11 +5,12 @@
 init:
 	    la $s0, x#x
 	    la $s1, y#y
-	    li $t0, 32
+	    li $t0, 16
 	    sw $t0, 0($s0)
 	    sw $t0, 0($s1)
 	    la $s2, seed#seed e constantes
 	    la $s3, mExit
+	    #$s4 cor da cobra
 	    #$s5 x da maca
 	    #$s6 y da maca
 	    li $s7, 1 #comprimento
@@ -47,6 +48,7 @@ finit:
 ########################################################################################################################
 main:            
         # corpo do programa
+        li $s4, NAVY
             lacoP:
  	    # desenho da cobra
  	    jal     verifica_pontuacao
@@ -84,7 +86,11 @@ desenha_cobra:
             addiu   $sp, $sp, -4        # ajustamos a pilha
             sw      $ra, 0($sp)         # armazenamos o endereÃ§o de retorno na pilha
         # corpo do procedimento
-            li      $a0, GREEN
+            addi $s4, $s4, 50    # Duplica a intensidade da cor em cada componente (pode precisar de máscara depois)
+            andi $s4, $s4, 0x00FFFFFF
+            
+            
+            move      $a0, $s4
             jal     set_foreground_color
             lw      $t0, 0($s0)
             lw      $t1, 0($s1)
@@ -151,7 +157,7 @@ mover_cobra:
             jal retirar_do_fim
             jal move_restante_cobra
             	lw $t0, 0($s0)
-            	beq $t0, 63, finit
+            	beq $t0, 31, finit
             	addi $t0, $t0, 1
             	sw $t0, 0($s0)
             	la $s3, mBaixo
@@ -161,7 +167,7 @@ mover_cobra:
             jal retirar_do_fim
             jal move_restante_cobra
             	lw $t1, 0($s1)
-            	beq $t1, 63, finit
+            	beq $t1, 31, finit
             	addi $t1, $t1, 1
             	sw $t1, 0($s1)
             	la $s3, mDireita
@@ -244,7 +250,7 @@ coordenada_aleatoria:
     
 
     # Limitação do intervalo
-    li      $t1, 64               # Define o limite superior (exclusivo)
+    li      $t1, 32               # Define o limite superior (exclusivo)
     rem     $t0, $t0, $t1         # Calcula o valor aleatório entre 0 e 63
     
     sw      $t0, 0($s2)
