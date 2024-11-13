@@ -1,33 +1,31 @@
-.text
-.globl main
-
-
 ########################################################################################################################
 # Inicia o programa. Realizamos as inicializações necessárias no programa, chamamos o procedimento principal main e em 
 # seguida um código para terminar o programa
 ########################################################################################################################
 init:
-	    li $s0, 0x10014120#x
-	    li $s1, 0x10014320#y
+	    la $s0, x#x
+	    la $s1, y#y
 	    li $t0, 32
 	    sw $t0, 0($s0)
 	    sw $t0, 0($s1)
-	    li $s2, 0x10014100#seed e constantes
-	    li $t0, 1323 #seed
-	    sw $t0, 0($s2)
-	    li $t0, 279 #constante multiplicativa
-	    sw $t0, 4($s2)
-	    li $t0, 23423 # Incremento
-	    sw $t0, 8($s2)
-	    la $s3, mCima
+	    la $s2, seed#seed e constantes
+	    la $s3, mExit
 	    #$s5 x da maca
 	    #$s6 y da maca
 	    li $s7, 1 #comprimento
+	    
 	    jal     init_graph_test
+	    jal     desenha_maca
             
             la      $t0, main
             jr    $t0                 # chama o procedimento principal
-########################################################################################################################
+.include "display_bitmap.asm"
+.data
+         x: .space 1000
+         y: .space 1000
+         seed: .word 1323, 279, 23423#seed, constante multiplicativa, Incremento
+.text
+.globl main
 
 
 
@@ -42,8 +40,6 @@ finit:
 ########################################################################################################################   
 
 
-.include "display_bitmap.asm"
-
 
 ########################################################################################################################
 # Mapa da Pilha
@@ -54,6 +50,7 @@ main:
             lacoP:
  	    # desenho da cobra
  	    jal     verifica_pontuacao
+ 	    
  	    jal     desenha_cobra
  	    
  	    jal     mover_cobra
@@ -76,7 +73,6 @@ init_graph_test:
             jal     set_background_color # escolhemos a cor azul para o fundo da tela
             jal     screen_init2         # inicializamos a tela gráfica
             
-            jal     desenha_maca
 # epílogo
             lw      $ra, 0($sp)         # restauramos o endereço de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
@@ -109,24 +105,39 @@ mover_cobra:
  # esperamos um caracter no terminal
             la    $t0, 0xFFFF0004   # endereço do RDR
             lw    $t2, 0($t0)       # $t2 <- caracter do terminal
+            
             li $v0, 32
             li $a0, 100
             syscall
 
             # lemos o carcater
             
+            la $t3, mCima
+            beq $t3, $s3, mHorizontal
+            la $t3, mBaixo
+            beq $t3, $s3, mHorizontal
+            la $t3, mEsquerda
+            beq $t3, $s3, mVertical
+            la $t3, mDireita
+            beq $t3, $s3, mVertical
             
-            beq $t2, 0x77, mCima
-            beq $t2, 0x57, mCima
-            beq $t2, 0x73, mBaixo
-            beq $t2, 0x53, mBaixo
-            beq $t2, 0x44, mDireita
-            beq $t2, 0x64, mDireita
-            beq $t2, 0x41, mEsquerda
-            beq $t2, 0x61, mEsquerda
+            mVertical:
+            beq $t2, 0x77, mCima #w
+            beq $t2, 0x57, mCima #W
+            beq $t2, 0x73, mBaixo #s
+            beq $t2, 0x53, mBaixo #S
             
+            la $t3, mExit
+            bne $s3, $t3, mElse
+            
+            mHorizontal:
+            beq $t2, 0x44, mDireita #D
+            beq $t2, 0x64, mDireita #d
+            beq $t2, 0x41, mEsquerda #A
+            beq $t2, 0x61, mEsquerda #a
+            
+            mElse:
             jr $s3
-            j mExit
             mCima:
             jal retirar_do_fim
             jal move_restante_cobra
