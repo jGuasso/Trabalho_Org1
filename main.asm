@@ -19,16 +19,10 @@ init:
 	    sw $t0, 4($s2)
 	    li $t0, 23423 # Incremento
 	    sw $t0, 8($s2)
-	    
-	    #$s3 direcao da cobra
-	    #  0:cima
-	    #  1:baixo
-	    #  2:esquerda
-	    #  3: direita
-	    
+	    la $s3, mCima
 	    #$s5 x da maca
 	    #$s6 y da maca
-	    li $s7, 2 #comprimento
+	    li $s7, 1 #comprimento
 	    jal     init_graph_test
             
             la      $t0, main
@@ -49,9 +43,6 @@ finit:
 
 
 .include "display_bitmap.asm"
-
-
-
 
 
 ########################################################################################################################
@@ -116,12 +107,14 @@ mover_cobra:
             addiu   $sp, $sp, -4        # ajustamos a pilha
             sw      $ra, 0($sp)         # armazenamos o endereÃ§o de retorno na pilha
  # esperamos um caracter no terminal
-            la    $t0, 0xFFFF0000   # endereÃ§o do RCR
-	
-            
-            # lemos o carcater
             la    $t0, 0xFFFF0004   # endereÃ§o do RDR
             lw    $t2, 0($t0)       # $t2 <- caracter do terminal
+            li $v0, 32
+            li $a0, 100
+            syscall
+
+            # lemos o carcater
+            
             
             beq $t2, 0x77, mCima
             beq $t2, 0x57, mCima
@@ -132,50 +125,48 @@ mover_cobra:
             beq $t2, 0x41, mEsquerda
             beq $t2, 0x61, mEsquerda
             
+            jr $s3
             j mExit
             mCima:
-            beq $s3, 1, mExit
-            jal move_restante_cobra
             jal retirar_do_fim
+            jal move_restante_cobra
                 lw $t0, 0($s0)
-                beq $t0, $zero, mExit
+                beq $t0, $zero, finit
             	addi $t0, $t0, -1
             	sw $t0, 0($s0)
-            	li $s3, 0
+            	la $s3, mCima
             j mExit
             mBaixo:
-            beq $s3, 0, mExit
-            jal move_restante_cobra
             jal retirar_do_fim
+            jal move_restante_cobra
             	lw $t0, 0($s0)
-            	beq $t0, 63, mExit
+            	beq $t0, 63, finit
             	addi $t0, $t0, 1
             	sw $t0, 0($s0)
-            	li $s3, 1
+            	la $s3, mBaixo
             j mExit
             
             mDireita:
-            beq $s3, 3, mExit
-            jal move_restante_cobra
             jal retirar_do_fim
+            jal move_restante_cobra
             	lw $t1, 0($s1)
-            	beq $t1, 63, mExit
+            	beq $t1, 63, finit
             	addi $t1, $t1, 1
             	sw $t1, 0($s1)
-            	li $s3, 3
+            	la $s3, mDireita
             j mExit
             mEsquerda:
-            beq $s3, 2, mExit
-            jal move_restante_cobra
             jal retirar_do_fim
+            jal move_restante_cobra
             	lw $t1, 0($s1)
-            	beq $t1, $zero, mExit
+            	beq $t1, $zero, finit
             	addi $t1, $t1, -1
-            	sw $t1, 0($s1)	
-            	li $s3, 2
+            	sw $t1, 0($s1)
+            	la $s3, mEsquerda
             
             mExit:
 # epÃ­logo
+            jal verificar_derrota
             lw      $ra, 0($sp)         # restauramos o endereÃ§o de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
             jr	    $ra                 # retornamos ao procedimento chamador
@@ -186,7 +177,7 @@ move_restante_cobra:
     sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
     # corpo do procedimento
     #for(i=c;i>0;i--)
-    move $t0, $s7
+    addi $t0, $s7, -1 
     sll $t0, $t0, 2
     add $t1, $t0, $s1
     add $t0, $t0, $s0
@@ -312,6 +303,36 @@ retirar_do_fim:
     jal     put_pixel
     
     
+    # Epílogo
+    lw      $ra, 0($sp)           # Restauramos o endereço de retorno
+    addiu   $sp, $sp, 4           # Restauramos a pilha
+    jr      $ra                   # Retornamos ao procedimento chamador
+
+verificar_derrota:
+    # Prólogo
+    addiu   $sp, $sp, -4          # Ajustamos a pilha
+    sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
+    # Corpo do procedimento
+    addi $t0, $s7, -1
+    beqz $t0, derExit
+    sll $t0, $t0, 2
+    add $t1, $t0, $s1
+    add $t0, $t0, $s0
+    lw $t4, 0($s0)
+    lw $t5, 0($s1)
+    verFor:
+    	lw $t3, 0($t0)
+    	bne $t4, $t3, verElse
+    	lw $t3, 0($t1)
+    	bne $t5, $t3, verElse
+    	j finit
+    	
+    	verElse:
+    	addi $t0, $t0, -4
+    	addi $t1, $t1, -4
+    	
+        bne $t0, $s0, verFor
+    derExit:
     # Epílogo
     lw      $ra, 0($sp)           # Restauramos o endereço de retorno
     addiu   $sp, $sp, 4           # Restauramos a pilha
