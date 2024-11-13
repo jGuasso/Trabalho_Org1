@@ -1,0 +1,4 @@
+Abra o arquivo exemplo.asm no MARS. conecte a ferramenta bitmap display ao Mars. Execute o arquivo exemplo.asm. O arquivo display_bitmap.asm deve estar no mesmo diretório de exemplo.asm. Leia o arquivo display_bitmap.asm para configurar a ferramenta bitmap display.
+
+display_bitmap.asm      variáveis, constantes e procedimentos para utilizar a ferramenta bitmap display do MARS
+exemplo.asm             exemplo usando procedimentos de display_bitmap.asm
