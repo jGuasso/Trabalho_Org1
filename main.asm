@@ -1,6 +1,6 @@
 ########################################################################################################################
-# Inicia o programa. Realizamos as inicializaÃ§Ãµes necessÃ¡rias no programa, chamamos o procedimento principal main e em 
-# seguida um cÃ³digo para terminar o programa
+# Inicia o programa. Realizamos as inicializações necessárias no programa, chamamos o procedimento principal main e em 
+# seguida um código para terminar o programa
 ########################################################################################################################
 init:
 	    la $s0, x#x
@@ -16,7 +16,7 @@ init:
 	    li $s7, 1 #comprimento
 	    
 	    jal     init_graph_test
-	    jal     desenha_maca
+	    jal     gera_maca
             
             la      $t0, main
             jr    $t0                 # chama o procedimento principal
@@ -35,16 +35,16 @@ init:
 # Termina o programa, retornando o valor do procedimento main.
 ########################################################################################################################
 finit:
-            move    $a0, $v0            # o valor de retorno de main Ã© colocado em $a0
-            li      $v0, 17             # serviÃ§o 17: termina o programa
-            syscall                     # fazemos a chamada ao serviÃ§o 17.
+            move    $a0, $v0            # o valor de retorno de main é colocado em $a0
+            li      $v0, 17             # serviço 17: termina o programa
+            syscall                     # fazemos a chamada ao serviço 17.
 ########################################################################################################################   
 
 
 
 ########################################################################################################################
 # Mapa da Pilha
-# $ra :     $sp+0   endereÃ§o de retorno do procedimento     
+# $ra :     $sp+0   endereço de retorno do procedimento     
 ########################################################################################################################
 main:            
         # corpo do programa
@@ -53,40 +53,42 @@ main:
  	    # desenho da cobra
  	    jal     verifica_pontuacao
  	    
+ 	    jal     desenha_maca
+ 	    
  	    jal     desenha_cobra
  	    
  	    jal     mover_cobra
  	    
  	    j lacoP
- 
-# epÃ­logo
+
+# epílogo
             la      $t0, finit
             jr      $t0                 # termina o programa
  
 # Mapa da Pilha
-# $ra   :       $sp + 0 endereÃ§o de retorno do procedimento
+# $ra   :       $sp + 0 endereço de retorno do procedimento
 ########################################################################################################################
 init_graph_test:
-# prÃ³logo
+# prólogo
             addiu   $sp, $sp, -4        # ajustamos a pilha
-            sw      $ra, 0($sp)         # armazenamos o endereÃ§o de retorno na pilha
+            sw      $ra, 0($sp)         # armazenamos o endereço de retorno na pilha
 # corpo do procedimento
             li      $a0, WHITE           # $a0 <- BLUE (azul)
             jal     set_background_color # escolhemos a cor azul para o fundo da tela
-            jal     screen_init2         # inicializamos a tela grÃ¡fica
+            jal     screen_init2         # inicializamos a tela gráfica
             
-# epÃ­logo
-            lw      $ra, 0($sp)         # restauramos o endereÃ§o de retorno
+# epílogo
+            lw      $ra, 0($sp)         # restauramos o endereço de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
             jr	    $ra                 # retornamos ao procedimento chamador
 ########################################################################################################################
 
 desenha_cobra:
-	# prÃ³logo
+	# prólogo
             addiu   $sp, $sp, -4        # ajustamos a pilha
-            sw      $ra, 0($sp)         # armazenamos o endereÃ§o de retorno na pilha
+            sw      $ra, 0($sp)         # armazenamos o endereço de retorno na pilha
         # corpo do procedimento
-            addi $s4, $s4, 50    # Duplica a intensidade da cor em cada componente (pode precisar de máscara depois)
+            addi $s4, $s4, 50    # Duplica a intensidade da cor em cada componente (pode precisar de m?ara depois)
             andi $s4, $s4, 0x00FFFFFF
             
             
@@ -98,18 +100,18 @@ desenha_cobra:
             or      $a1, $zero, $t1
             jal     put_pixel
             
-# epÃ­logo
-            lw      $ra, 0($sp)         # restauramos o endereÃ§o de retorno
+# epílogo
+            lw      $ra, 0($sp)         # restauramos o endereço de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
             jr	    $ra                 # retornamos ao procedimento chamador
 ########################################################################################################################
 
 mover_cobra:
-	    # prÃ³logo
+	    # prólogo
             addiu   $sp, $sp, -4        # ajustamos a pilha
-            sw      $ra, 0($sp)         # armazenamos o endereÃ§o de retorno na pilha
+            sw      $ra, 0($sp)         # armazenamos o endereço de retorno na pilha
  # esperamos um caracter no terminal
-            la    $t0, 0xFFFF0004   # endereÃ§o do RDR
+            la    $t0, 0xFFFF0004   # endereço do RDR
             lw    $t2, 0($t0)       # $t2 <- caracter do terminal
             
             li $v0, 32
@@ -182,16 +184,16 @@ mover_cobra:
             	la $s3, mEsquerda
             
             mExit:
-# epÃ­logo
+# epílogo
             jal verificar_derrota
-            lw      $ra, 0($sp)         # restauramos o endereÃ§o de retorno
+            lw      $ra, 0($sp)         # restauramos o endereço de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
             jr	    $ra                 # retornamos ao procedimento chamador
             
 move_restante_cobra:
-    # Prólogo
+    # Pr?o
     addiu   $sp, $sp, -4         # Ajustamos a pilha
-    sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
+    sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
     # corpo do procedimento
     #for(i=c;i>0;i--)
     addi $t0, $s7, -1 
@@ -210,62 +212,74 @@ move_restante_cobra:
     	
         bne $t0, $s0, mrFor            
     
-    # Epílogo
+    # Ep?o
     mrExit:
-    lw      $ra, 0($sp)           # Restauramos o endereço de retorno
+    lw      $ra, 0($sp)           # Restauramos o endere?de retorno
     addiu   $sp, $sp, 4          # Restauramos a pilha
     jr      $ra                   # Retornamos ao procedimento chamador
             
 desenha_maca:
-    # Prólogo
+    # Pr?o
     addiu   $sp, $sp, -4         # Ajustamos a pilha
-    sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
+    sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
     
     # Corpo do procedimento
     li      $a0, RED
     jal     set_foreground_color
-    jal     coordenada_aleatoria
-    move    $s5, $v0           # Armazena a coordenada x
-    jal     coordenada_aleatoria
-    move    $s6, $v0
     move    $a0, $s5
     move    $a1, $s6
     jal     put_pixel
     
-    # Epílogo
-    lw      $ra, 0($sp)           # Restauramos o endereço de retorno
+    # Ep?o
+    lw      $ra, 0($sp)           # Restauramos o endere?de retorno
+    addiu   $sp, $sp, 4          # Restauramos a pilha
+    jr      $ra                   # Retornamos ao procedimento chamador
+
+gera_maca:
+    # Pr?o
+    addiu   $sp, $sp, -4         # Ajustamos a pilha
+    sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
+    
+    # Corpo do procedimento
+    jal     coordenada_aleatoria
+    move    $s5, $v0           # Armazena a coordenada x
+    jal     coordenada_aleatoria
+    move    $s6, $v0
+    
+    # Ep?o
+    lw      $ra, 0($sp)           # Restauramos o endere?de retorno
     addiu   $sp, $sp, 4          # Restauramos a pilha
     jr      $ra                   # Retornamos ao procedimento chamador
 
 coordenada_aleatoria:
-    # Prólogo
+    # Pr?o
     addiu   $sp, $sp, -4          # Ajustamos a pilha
-    sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
+    sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
     lw      $t1, 0($s2)
     lw      $t2, 4($s2)
     lw      $t3, 8($s2)
-    # Corpo do procedimento - Geração de número aleatório
+    # Corpo do procedimento - Gera? de número aleat?
     mul     $t0, $t1, $t2         # $t0 = seed * a
     add     $t0, $t0, $t3         # $t0 = ($t0 + c)
     
 
-    # Limitação do intervalo
+    # Limita? do intervalo
     li      $t1, 32               # Define o limite superior (exclusivo)
-    rem     $t0, $t0, $t1         # Calcula o valor aleatório entre 0 e 63
+    rem     $t0, $t0, $t1         # Calcula o valor aleat? entre 0 e 63
     
     sw      $t0, 0($s2)
     move    $v0, $t0
 
-    # Epílogo
-    lw      $ra, 0($sp)           # Restauramos o endereço de retorno
+    # Ep?o
+    lw      $ra, 0($sp)           # Restauramos o endere?de retorno
     addiu   $sp, $sp, 4           # Restauramos a pilha
     jr      $ra                   # Retornamos ao procedimento chamador
 
 
 verifica_pontuacao:
-    # Prólogo
+    # Pr?o
     addiu   $sp, $sp, -4          # Ajustamos a pilha
-    sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
+    sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
 
     lw $t0, 0($s0)
     lw $t2, 0($s1)
@@ -288,18 +302,18 @@ verifica_pontuacao:
     
     addi $s7, $s7, 1
     
-    jal     desenha_maca
+    jal     gera_maca
 
-    # Epílogo
+    # Ep?o
     verExit:
-    lw      $ra, 0($sp)           # Restauramos o endereço de retorno
+    lw      $ra, 0($sp)           # Restauramos o endere?de retorno
     addiu   $sp, $sp, 4           # Restauramos a pilha
     jr      $ra                   # Retornamos ao procedimento chamador
 
 retirar_do_fim:
-    # Prólogo
+    # Pr?o
     addiu   $sp, $sp, -4          # Ajustamos a pilha
-    sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
+    sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
     # Corpo do procedimento
     li      $a0, WHITE
     jal     set_foreground_color
@@ -320,15 +334,15 @@ retirar_do_fim:
     jal     put_pixel
     
     
-    # Epílogo
-    lw      $ra, 0($sp)           # Restauramos o endereço de retorno
+    # Ep?o
+    lw      $ra, 0($sp)           # Restauramos o endere?de retorno
     addiu   $sp, $sp, 4           # Restauramos a pilha
     jr      $ra                   # Retornamos ao procedimento chamador
 
 verificar_derrota:
-    # Prólogo
+    # Pr?o
     addiu   $sp, $sp, -4          # Ajustamos a pilha
-    sw      $ra, 0($sp)           # Armazenamos o endereço de retorno na pilha
+    sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
     # Corpo do procedimento
     addi $t0, $s7, -1
     beqz $t0, derExit
@@ -350,7 +364,7 @@ verificar_derrota:
     	
         bne $t0, $s0, verFor
     derExit:
-    # Epílogo
-    lw      $ra, 0($sp)           # Restauramos o endereço de retorno
+    # Ep?o
+    lw      $ra, 0($sp)           # Restauramos o endere?de retorno
     addiu   $sp, $sp, 4           # Restauramos a pilha
     jr      $ra                   # Retornamos ao procedimento chamador
