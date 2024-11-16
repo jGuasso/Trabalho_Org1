@@ -1,13 +1,13 @@
 ########################################################################################################################
-# ConfiguraÁ„o do Bitmap Display
-# Dimensıes do pixel 16x16
-# Dimensıes da tela 512x512
+# Configura√ß√£o do Bitmap Display
+# Dimens√µes do pixel 16x16
+# Dimens√µes da tela 512x512
 ########################################################################################################################
 
 .text
 ########################################################################################################################
-# Inicia o programa. Realizamos as inicializaÁıes necess·rias no programa chamamos e o procedimento principal main
-# Coloquei o Init primeiro, pois foi a ˙nica maneira do ".include display_bitmap.asm" n„o interferir nas inicializaÁıes de vari·veis no .data
+# Inicia o programa. Realizamos as inicializa√ß√µes necess√°rias no programa chamamos e o procedimento principal main
+# Coloquei o Init primeiro, pois foi a √∫nica maneira do ".include display_bitmap.asm" n√£o interferir nas inicializa√ß√µes de vari√°veis no .data
 ########################################################################################################################
 init:
 	    la $s0, x# coordenada x
@@ -17,10 +17,10 @@ init:
 	    sw $t0, 0($s0)
 	    sw $t0, 0($s1)
 	    
-	    #seed e constantes para geraÁ„o de um n˙mero aleatÛrio
+	    #seed e constantes para gera√ß√£o de um n√∫mero aleat√≥rio
 	    la $s2, seed
 	    
-	    #DireÁ„o que a cobra est· seguindo, inicializada com mExit, para n„o se mexer quando o jogo comeÁar
+	    #Dire√ß√£o que a cobra est√° seguindo, inicializada com mExit, para n√£o se mexer quando o jogo come√ßar
 	    la $s3, mExit
 	    
 	    #$s4 cor da cobra
@@ -30,9 +30,9 @@ init:
 	    #comprimento da cobra
 	    li $s7, 1
 	    
-	    #FunÁ„o que pinta o fundo
+	    #Fun√ß√£o que pinta o fundo
 	    jal     init_graph_test
-	    #InicializaÁ„o da maÁ„
+	    #Inicializa√ß√£o da ma√ß√£
 	    jal     gera_maca
             
             la      $t0, main
@@ -41,17 +41,17 @@ init:
 .include "display_bitmap.asm"            
 
 ########################################################################################################################
-# Inicia o programa. Realizamos as inicializaÁıes necess·rias no programa chamamos e o procedimento principal main
+# Inicia o programa. Realizamos as inicializa√ß√µes necess√°rias no programa chamamos e o procedimento principal main
 ########################################################################################################################
 .data
-	 #EspaÁo m·ximo necess·rio para a cobra caso ela ocupe o tabuleiro inteiro
-	 # 32 x 32 = 1024, cada word precisa de 2 bytes, ent„o 1024 x 2 = 2048 
+	 #Espa√ßo m√°ximo necess√°rio para a cobra caso ela ocupe o tabuleiro inteiro
+	 # 32 x 32 = 1024, cada word precisa de 2 bytes, ent√£o 1024 x 2 = 2048 
          x: .space 2048
          y: .space 2048
          
          #seed, constante multiplicativa, Incremento
          seed: .word 53, 13, 17
-         #optei por n˙meros primos pois acho que fica mais difÌcil de criar padrıes previsiveis
+         #optei por n√∫meros primos pois acho que fica mais dif√≠cil de criar padr√µes previsiveis
  
 ########################################################################################################################
         
@@ -65,26 +65,26 @@ init:
 # Termina o programa, retornando o valor do procedimento main.
 ########################################################################################################################
 finit:
-            move    $a0, $v0            # o valor de retorno de main È colocado em $a0
-            li      $v0, 17             # serviÁo 17: termina o programa
-            syscall                     # fazemos a chamada ao serviÁo 17.
+            move    $a0, $v0            # o valor de retorno de main √© colocado em $a0
+            li      $v0, 17             # servi√ßo 17: termina o programa
+            syscall                     # fazemos a chamada ao servi√ßo 17.
 ########################################################################################################################   
 
 
 
 ########################################################################################################################
-# Procedimento principal de execuÁ„o do programa     
+# Procedimento principal de execu√ß√£o do programa     
 ########################################################################################################################
 main:            
         # corpo do programa
         #carrego a cor inicial
         li $s4, NAVY
             lacoP:
- 	    #Verifica se a maÁ„ foi comida
+ 	    #Verifica se a ma√ß√£ foi comida
  	    jal     verifica_pontuacao
  	    
- 	    #Desenha a maÁ„ na tela
- 	    #Esse procedimento È chamado toda vez para n„o correr o risco da maÁ„ ser apagada pela cobra
+ 	    #Desenha a ma√ß√£ na tela
+ 	    #Esse procedimento √© chamado toda vez para n√£o correr o risco da ma√ß√£ ser apagada pela cobra
  	    jal     desenha_maca
  	    
  	    #Desenha a cobra
@@ -96,42 +96,42 @@ main:
  	    #Verifica se bateu no proprio corpo da cobra
  	    jal    verificar_derrota
  	    
- 	    #Volta para o laÁo
+ 	    #Volta para o la√ßo
  	    j lacoP
 
-# epÌlogo
+# ep√≠logo
             la      $t0, finit
             jr      $t0                 # termina o programa
 ########################################################################################################################
 # Procedimento que pinta o fundo de branco
 ########################################################################################################################
 init_graph_test:
-# prÛlogo
+# pr√≥logo
             addiu   $sp, $sp, -4        # ajustamos a pilha
-            sw      $ra, 0($sp)         # armazenamos o endereÁo de retorno na pilha
+            sw      $ra, 0($sp)         # armazenamos o endere√ßo de retorno na pilha
 # corpo do procedimento
             li      $a0, WHITE           # $a0 <- WHITE
             jal     set_background_color # escolhemos a cor branca para o fundo da tela
-            jal     screen_init2         # inicializamos a tela gr·fica
+            jal     screen_init2         # inicializamos a tela gr√°fica
             
-# epÌlogo
-            lw      $ra, 0($sp)         # restauramos o endereÁo de retorno
+# ep√≠logo
+            lw      $ra, 0($sp)         # restauramos o endere√ßo de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
             jr	    $ra                 # retornamos ao procedimento chamador
 ########################################################################################################################
 
 ########################################################################################################################
-# Desenha a cabeÁa da cobra(Parte dianteira
+# Desenha a cabe√ßa da cobra(Parte dianteira)
 ########################################################################################################################
 desenha_cobra:
-	# prÛlogo
+	# pr√≥logo
             addiu   $sp, $sp, -4        # ajustamos a pilha
-            sw      $ra, 0($sp)         # armazenamos o endereÁo de retorno na pilha
+            sw      $ra, 0($sp)         # armazenamos o endere√ßo de retorno na pilha
         # corpo do procedimento
             #COR
-            #cria efeito de mudanÁa de cor durante o jogo
+            #cria efeito de mudan√ßa de cor durante o jogo
             addi $s4, $s4, 50 #soma 50 ao registrador que guarda a cor
-            andi $s4, $s4, 0x00FFFFFF #m·scara para evitar que extrapole o n˙mero necess·rio para representar a cor
+            andi $s4, $s4, 0x00FFFFFF #m√°scara para evitar que extrapole o n√∫mero necess√°rio para representar a cor
             #Seleciona a cor
             move      $a0, $s4
             jal     set_foreground_color
@@ -141,30 +141,30 @@ desenha_cobra:
             lw      $a1, 0($s1)
             jal     put_pixel
             
-# epÌlogo
-            lw      $ra, 0($sp)         # restauramos o endereÁo de retorno
+# ep√≠logo
+            lw      $ra, 0($sp)         # restauramos o endere√ßo de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
             jr	    $ra                 # retornamos ao procedimento chamador
 ########################################################################################################################
 
 ########################################################################################################################
-# Procedimento que move a cabeÁa da cobra(parte dianteira)
+# Procedimento que move a cabe√ßa da cobra(parte dianteira)
 ########################################################################################################################
 mover_cobra:
-	    # prÛlogo
+	    # pr√≥logo
             addiu   $sp, $sp, -4        # ajustamos a pilha
-            sw      $ra, 0($sp)         # armazenamos o endereÁo de retorno na pilha
+            sw      $ra, 0($sp)         # armazenamos o endere√ßo de retorno na pilha
  #Recebe o caracter digitado no Keyboard and Display MMIO Simulator
-            la    $t0, 0xFFFF0004   # endereÁo do RDR (Receiver Data Register)
+            la    $t0, 0xFFFF0004   # endere√ßo do RDR (Receiver Data Register)
             lw    $t2, 0($t0)       # $t2 <- caracter do terminal
             
             #Syscall de sleep de 100 milissegundos (0.1 segundos)
             #Para limitar a velocidade da cobra
-            li $v0, 32 #N˙mero da Syscall
+            li $v0, 32 #N√∫mero da Syscall
             li $a0, 100 #Tempo de espera em milissegundos
             syscall
 
-            #Para evitar movimentaÁıes erradas, como o usuario se movimentar contra o prÛprio corpo da cobra
+            #Para evitar movimenta√ß√µes erradas, como o usuario se movimentar contra o pr√≥prio corpo da cobra
             #Caso a cobra esteja se movimentando no eixo VERTICAL
             la $t3, mCima
             beq $t3, $s3, mHorizontal
@@ -176,8 +176,8 @@ mover_cobra:
             la $t3, mDireita
             beq $t3, $s3, mVertical
             
-            #MovimentaÁıes possÌveis para o eixo vertical
-            #Tratamento para os caracteres mai˙sculos a partir de seu cÛdigo ASCII
+            #Movimenta√ß√µes poss√≠veis para o eixo vertical
+            #Tratamento para os caracteres mai√∫sculos a partir de seu c√≥digo ASCII
             mVertical:
             beq $t2, 0x77, mCima #w
             beq $t2, 0x57, mCima #W
@@ -185,15 +185,15 @@ mover_cobra:
             beq $t2, 0x53, mBaixo #S
             
             #Caso nenhum caractere valido seja verificado
-            #Se a cobra estiver em movimento, continua na mesma direÁ„o
+            #Se a cobra estiver em movimento, continua na mesma dire√ß√£o
             #Se a cobra estiver parada, verificasse o eixo horizontal
             la $t3, mExit
             bne $s3, $t3, mElse
             
             
             
-            #MovimentaÁıes possÌveis para o eixo horizontal
-            #Tratamento para os caracteres mai˙sculos a partir de seu cÛdigo ASCII
+            #Movimenta√ß√µes poss√≠veis para o eixo horizontal
+            #Tratamento para os caracteres mai√∫sculos a partir de seu c√≥digo ASCII
             mHorizontal:
             beq $t2, 0x44, mDireita #D
             beq $t2, 0x64, mDireita #d
@@ -205,7 +205,7 @@ mover_cobra:
             #Continua o mesmo movimento caso NENHUM caracter valido tenha sido digitado
             jr $s3
             
-            #MovimentaÁ„o para cima
+            #Movimenta√ß√£o para cima
             mCima:
             #Retira o fim da cobra
             jal retirar_do_fim
@@ -213,11 +213,11 @@ mover_cobra:
             #Altera o resto das coordenadas da cobra
             jal move_restante_cobra
             
-                lw $t0, 0($s0) #$t0 <- x(cabeÁa da cobra)
+                lw $t0, 0($s0) #$t0 <- x(cabe√ßa da cobra)
                 beq $t0, $zero, finit  # Caso a cobra bata na parte superior da tela
-            	addi $t0, $t0, -1 #ajusta a posiÁ„o da coordenada x da cabeÁa
+            	addi $t0, $t0, -1 #ajusta a posi√ß√£o da coordenada x da cabe√ßa
             	sw $t0, 0($s0) #salva o ajuste
-            	la $s3, mCima #salva a direÁ„o que a cobra est· indo
+            	la $s3, mCima #salva a dire√ß√£o que a cobra est√° indo
             j mExit #pula pro final
             mBaixo:
             #Retira o fim da cobra
@@ -225,11 +225,11 @@ mover_cobra:
             
             #Altera o resto das coordenadas da cobra
             jal move_restante_cobra
-            	lw $t0, 0($s0) #$t0 <- x(cabeÁa da cobra)
+            	lw $t0, 0($s0) #$t0 <- x(cabe√ßa da cobra)
             	beq $t0, 31, finit # Caso a cobra bata na parte inferior da tela
-            	addi $t0, $t0, 1  #ajusta a posiÁ„o da coordenada x da cabeÁa
+            	addi $t0, $t0, 1  #ajusta a posi√ß√£o da coordenada x da cabe√ßa
             	sw $t0, 0($s0) #salva o ajuste
-            	la $s3, mBaixo #salva a direÁ„o que a cobra est· indo
+            	la $s3, mBaixo #salva a dire√ß√£o que a cobra est√° indo
             j mExit #pula pro final
             
             mDireita:
@@ -238,11 +238,11 @@ mover_cobra:
             
             #Altera o resto das coordenadas da cobra
             jal move_restante_cobra
-            	lw $t1, 0($s1) #$t1 <- y(cabeÁa da cobra)
+            	lw $t1, 0($s1) #$t1 <- y(cabe√ßa da cobra)
             	beq $t1, 31, finit # Caso a cobra bata na parte a direita da tela
-            	addi $t1, $t1, 1 #ajusta a posiÁ„o da coordenada y da cabeÁa
+            	addi $t1, $t1, 1 #ajusta a posi√ß√£o da coordenada y da cabe√ßa
             	sw $t1, 0($s1)  #salva o ajuste
-            	la $s3, mDireita #salva a direÁ„o que a cobra est· indo
+            	la $s3, mDireita #salva a dire√ß√£o que a cobra est√° indo
             j mExit  #pula pro final
             mEsquerda:
             #Retira o fim da cobra
@@ -250,15 +250,15 @@ mover_cobra:
             
             #Altera o resto das coordenadas da cobra
             jal move_restante_cobra
-            	lw $t1, 0($s1) #$t1 <- y(cabeÁa da cobra)
+            	lw $t1, 0($s1) #$t1 <- y(cabe√ßa da cobra)
             	beq $t1, $zero, finit # Caso a cobra bata na parte a esquerda da tela
-            	addi $t1, $t1, -1 #ajusta a posiÁ„o da coordenada y da cabeÁa
+            	addi $t1, $t1, -1 #ajusta a posi√ß√£o da coordenada y da cabe√ßa
             	sw $t1, 0($s1)  #salva o ajuste
-            	la $s3, mEsquerda #salva a direÁ„o que a cobra est· indo
+            	la $s3, mEsquerda #salva a dire√ß√£o que a cobra est√° indo
             
             mExit:# fim
-# epÌlogo
-            lw      $ra, 0($sp)         # restauramos o endereÁo de retorno
+# ep√≠logo
+            lw      $ra, 0($sp)         # restauramos o endere√ßo de retorno
             addiu   $sp, $sp, 4         # restauramos a pilha
             jr	    $ra                 # retornamos ao procedimento chamador
 ########################################################################################################################
@@ -272,29 +272,29 @@ move_restante_cobra:
     sw      $ra, 0($sp)           # Armazenamos o endere?de retorno na pilha
     # corpo do procedimento
     #for(i=c;i>0;i--)
-    #Comprimento - 1 pois a cabeÁa est· na posiÁ„o 0
+    #Comprimento - 1 pois a cabe√ßa est√° na posi√ß√£o 0
     addi $t0, $s7, -1 # $t0 <- Comprimento - 1
     sll $t0, $t0, 2 # $t0 <- 4*(Comprimento - 1)
-    #Seleciona a ultima posiÁ„o de ambos arrays
+    #Seleciona a ultima posi√ß√£o de ambos arrays
     add $t1, $t0, $s1 # $t1 <- Y[Comprimento - 1]
     add $t0, $t0, $s0 # $t0 <- X[Comprimento - 1]
     
-    #Se o endereÁo do inicio for igual ao final, pule para o final
+    #Se o endere√ßo do inicio for igual ao final, pule para o final
     beq $t0, $s0, mrExit
-    #laÁo para mover todas as coordenadas
+    #la√ßo para mover todas as coordenadas
     mrFor:
     	#X[Comprimento - i - 1] = X[Comprimento - i - 2]
-    	lw $t3, -4($t0)#cÈlula anterior(x)
-    	sw $t3, 0($t0) #salva a cÈlula anterior na prÛxima(x)
+    	lw $t3, -4($t0)#c√©lula anterior(x)
+    	sw $t3, 0($t0) #salva a c√©lula anterior na pr√≥xima(x)
     	#Y[Comprimento - i - 1] = Y[Comprimento - i - 2]
-    	lw $t3, -4($t1)#cÈlula anterior(y)
-    	sw $t3, 0($t1) #salva a cÈlula anterior na prÛxima(y)
+    	lw $t3, -4($t1)#c√©lula anterior(y)
+    	sw $t3, 0($t1) #salva a c√©lula anterior na pr√≥xima(y)
     	
-    	#anda uma cÈlula para tr·s
+    	#anda uma c√©lula para tr√°s
     	addi $t0, $t0, -4
     	addi $t1, $t1, -4
     	
-    	 #Se a cÈlula for diferente da inicial, continue o laÁo
+    	 #Se a c√©lula for diferente da inicial, continue o la√ßo
         bne $t0, $s0, mrFor            
     
     # Ep?o
@@ -305,7 +305,7 @@ move_restante_cobra:
 ########################################################################################################################
 
 ########################################################################################################################
-# Desenha a maÁ„ na posiÁ„o salva nos registradores $s5(x) e $s6(y)
+# Desenha a ma√ß√£ na posi√ß√£o salva nos registradores $s5(x) e $s6(y)
 ########################################################################################################################       
 desenha_maca:
     # Pr?o
@@ -317,8 +317,8 @@ desenha_maca:
     li      $a0, RED 
     jal     set_foreground_color
     #Coloca o pixel na tela
-    move    $a0, $s5 #$a0 <- x da maÁ„
-    move    $a1, $s6 #$a1 <- y da maÁ„
+    move    $a0, $s5 #$a0 <- x da ma√ß√£
+    move    $a1, $s6 #$a1 <- y da ma√ß√£
     jal     put_pixel#Coloca o pixel
     
     # Ep?o
@@ -338,9 +338,9 @@ gera_maca:
     
     # Corpo do procedimento
     jal     coordenada_aleatoria #Gera a coordenada aleatoria
-    move    $s5, $v0           # Armazena a coordenada x da maÁ„
+    move    $s5, $v0           # Armazena a coordenada x da ma√ß√£
     jal     coordenada_aleatoria #Gera a coordenada aleatoria
-    move    $s6, $v0           # Armazena a coordenada y da maÁ„
+    move    $s6, $v0           # Armazena a coordenada y da ma√ß√£
     
     # Ep?o
     lw      $ra, 0($sp)           # Restauramos o endere?de retorno
@@ -350,7 +350,7 @@ gera_maca:
 ########################################################################################################################
 
 ########################################################################################################################
-# Gera as coordenada Pseudo-aleatÛria a partir de uma seed, e deconstantes de multiplicaÁ„o e incremento
+# Gera as coordenada Pseudo-aleat√≥ria a partir de uma seed, e deconstantes de multiplica√ß√£o e incremento
 ########################################################################################################################    
 coordenada_aleatoria:
     # Pr?o
@@ -369,7 +369,7 @@ coordenada_aleatoria:
     rem     $t0, $t0, $t1         # $t0 <- $t0 % 32
     
     sw      $t0, 0($s2)           # seed <- $t0
-    move    $v0, $t0              # o retorno È $t0
+    move    $v0, $t0              # o retorno √© $t0
 
     # Ep?o
     lw      $ra, 0($sp)           # Restauramos o endere?de retorno
@@ -380,7 +380,7 @@ coordenada_aleatoria:
 ########################################################################################################################
 
 ########################################################################################################################
-# Verifica se o usuario pontuou (comeu a maÁ„)
+# Verifica se o usuario pontuou (comeu a ma√ß√£)
 ########################################################################################################################   
 verifica_pontuacao:
     # Pr?o
@@ -390,13 +390,13 @@ verifica_pontuacao:
     lw $t0, 0($s0) #$t0 <- x[0]
     lw $t2, 0($s1) #$t2 <- y[0]
     
-    #Verifica a posiÁ„o
-    bne $t0, $s5, verExit# Se x[0] != x_maÁ„ ent„o saia
-    bne $t2, $s6, verExit# Se y[0] != y_maÁ„ ent„o saia
+    #Verifica a posi√ß√£o
+    bne $t0, $s5, verExit# Se x[0] != x_ma√ß√£ ent√£o saia
+    bne $t2, $s6, verExit# Se y[0] != y_ma√ß√£ ent√£o saia
     
     addi $s7, $s7, 1 #Incrementa o comprimento em 1
     
-    #Gera uma nova maÁ„
+    #Gera uma nova ma√ß√£
     jal     gera_maca
 
     # Ep?o
@@ -407,7 +407,7 @@ verifica_pontuacao:
 ########################################################################################################################
 
 ########################################################################################################################
-# Retira a ultima cÈlula da cobra para ela se movimentar
+# Retira a ultima c√©lula da cobra para ela se movimentar
 ########################################################################################################################   
 retirar_do_fim:
     # Pr?o
@@ -425,8 +425,8 @@ retirar_do_fim:
     #calcula o final da cobra
     addi $t2, $t2, -1#$t2 <- $t2 - 1 | (Comprimento - 1)
     sll $t2, $t2, 2  #$t2 <- $t2 * 4 | (Comprimento - 1)*4
-    add  $t0, $t2, $t0#$t0 <- $t2 + $t0 | $t0 = &X[Comprimento-1](endereÁo)
-    add  $t1, $t2, $t1#$t1 <- $t2 + $t1 | $t1 = &Y[Comprimento-1](endereÁo)
+    add  $t0, $t2, $t0#$t0 <- $t2 + $t0 | $t0 = &X[Comprimento-1](endere√ßo)
+    add  $t1, $t2, $t1#$t1 <- $t2 + $t1 | $t1 = &Y[Comprimento-1](endere√ßo)
     
     #Carrega as coordenadas do final da cobra
     lw $a0, 0($t0) # $a0 <- X[Comprimento-1](valor)
@@ -443,7 +443,7 @@ retirar_do_fim:
 ########################################################################################################################
 
 ########################################################################################################################
-# Verifica se a cobra colidiu com o prÛprio corpo
+# Verifica se a cobra colidiu com o pr√≥prio corpo
 ########################################################################################################################  
 verificar_derrota:
     # Pr?o
@@ -459,26 +459,26 @@ verificar_derrota:
     add $t0, $t0, $s0 #X+(Comprimento - 1)*4
     lw $t4, 0($s0) # $t4 <- X[0]
     lw $t5, 0($s1) # $t5 <- Y[0]
-    #LaÁo para verificar a cobra inteira
+    #La√ßo para verificar a cobra inteira
     verFor:
-        #Verifica a posiÁ„o
+        #Verifica a posi√ß√£o
     	lw $t3, 0($t0) #$t3 <- X[Comprimento - i - 1]
-    	#Se X[0] != X[Comprimento - i - 1] ent„o v· para verElse
+    	#Se X[0] != X[Comprimento - i - 1] ent√£o v√° para verElse
     	bne $t4, $t3, verElse
     	lw $t3, 0($t1) #$t3 <- Y[Comprimento - i - 1]
-    	#Se Y[0] == Y[Comprimento - i - 1] ent„o v· para verElse
+    	#Se Y[0] == Y[Comprimento - i - 1] ent√£o v√° para verElse
     	bne $t5, $t3, verElse
     	#Se ambas coordenadas forem iguais o jogo acaba
     	j finit
     	
-    	#Se pelo menos uma coordenada for diferente continua o laÁo
+    	#Se pelo menos uma coordenada for diferente continua o la√ßo
     	verElse:
-    	#Retorna uma posiÁ„o
+    	#Retorna uma posi√ß√£o
     	#i = i-1
     	addi $t0, $t0, -4
     	addi $t1, $t1, -4
     	
-    	#Quando i==0 a funÁ„o acaba
+    	#Quando i==0 a fun√ß√£o acaba
         bne $t0, $s0, verFor
     derExit:
     # Ep?o
